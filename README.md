@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/lizmat/Code-Coverable/actions/workflows/linux.yml/badge.svg)](https://github.com/lizmat/Code-Coverable/actions) [![Actions Status](https://github.com/lizmat/Code-Coverable/actions/workflows/macos.yml/badge.svg)](https://github.com/lizmat/Code-Coverable/actions) [![Actions Status](https://github.com/lizmat/Code-Coverable/actions/workflows/windows.yml/badge.svg)](https://github.com/lizmat/Code-Coverable/actions)
+
 NAME
 ====
 
