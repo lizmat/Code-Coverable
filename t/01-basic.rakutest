@@ -5,15 +5,15 @@ use Code::Coverable;
 plan 1;
 
 my @paths =
-  $*PROGRAM,
-  $*PROGRAM.parent.sibling("lib").add("Code").add("Coverable.rakumod"),
   $*PROGRAM.parent.sibling("bin").add("coverable-lines"),
+  $*PROGRAM.parent.sibling("lib").add("Code").add("Coverable.rakumod"),
+  $*PROGRAM,
 ;
 
 is-deeply coverable-files(@paths), Map.new(
-  "bin/coverable-lines"        => (1,4,5,6,7),
-  "lib/Code/Coverable.rakumod" => (3,5,6,9,10,11,12,13,14,15,18,19,20,24,26,27,29,30,31,32),
-  "t/01-basic.rakutest"        => (1,3,5,7,8,9,10,13,14,15,16,17),
+  @paths[0].Str => (1,4,5,6,7),
+  @paths[1].Str => (3,5,6,9,10,11,12,13,14,15,18,19,20,24,26,27,29,30,31,32),
+  @paths[2].Str => (1,3,5,7,8,9,10,13,14,15,16,17),
 ), 'are all expected lines seen';
 
 # vim: expandtab shiftwidth=4
