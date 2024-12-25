@@ -1,0 +1,25 @@
+{
+  "auth": "zef:lizmat",
+  "authors": [
+    "Elizabeth Mattijsen"
+  ],
+  "build-depends": [
+  ],
+  "depends": [
+  ],
+  "description": "Produce overview of coverable lines of code",
+  "license": "Artistic-2.0",
+  "name": "Code::Coverable",
+  "perl": "6.d",
+  "provides": {
+    "Code::Coverable": "lib/Code/Coverable.rakumod"
+  },
+  "resources": [
+  ],
+  "source-url": "",
+  "tags": [
+  ],
+  "test-depends": [
+  ],
+  "version": "0.0.1"
+}
