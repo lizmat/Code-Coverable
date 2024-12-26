@@ -44,18 +44,18 @@ coverable-files
 say coverable-files(@paths); # Map.new(path => lines)
 ```
 
-The `coverable-files` subroutine takes any number of positional arguments, each of which is assumed to be a path specification of a Raku source file (or an `IO::Path` object). It returns a `Map` with the path names as keys, and an ordered list of line numbers as the values.
+The `coverable-files` subroutine takes any number of positional arguments, each of which is assumed to be a path specification of a Raku source file (or an `IO::Path` object). It returns a `Map` with the absolute paths as keys, and an ordered list of line numbers as the values.
 
 SCRIPTS
 =======
 
-coverage-lines
-==============
+coverable-lines
+---------------
 
     $ coverable-lines t/01-basic.rakutest 
     t/01-basic.rakutest: 1,3,5,7,8,9,10,13,14,15,16,17
 
-The `coverable-lines` script accepts any number of paths and will attempt to produce one line of output for each path, and the line numbers of the lines that may appear in a coverage report.
+The `coverable-lines` script accepts any number of paths and will attempt to produce one line of output for each (absolute) path, and the line numbers of the lines that may appear in a coverage report.
 
 AUTHOR
 ======

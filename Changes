@@ -2,5 +2,8 @@ Revision history for Code::Coverable
 
 {{$NEXT}}
 
+0.0.2  2024-12-26T01:05:22+01:00
+    - Make sure keys are absolute paths always
+
 0.0.1  2024-12-25T19:55:10+01:00
     - Initial version

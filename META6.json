@@ -18,8 +18,9 @@
   ],
   "source-url": "https://github.com/lizmat/Code-Coverable.git",
   "tags": [
+    "COVERAGE"
   ],
   "test-depends": [
   ],
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
