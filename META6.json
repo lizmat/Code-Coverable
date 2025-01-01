@@ -6,6 +6,7 @@
   "build-depends": [
   ],
   "depends": [
+    "MoarVM::Bytecode:ver<0.0.21+>:auth<zef:lizmat>"
   ],
   "description": "Produce overview of coverable lines of code",
   "license": "Artistic-2.0",

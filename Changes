@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+    - Add dependency on MoarVM::Bytecode
+    - Allow identities to be specified as well as paths
 
 0.0.2  2024-12-26T01:05:22+01:00
     - Make sure keys are absolute paths always

@@ -14,6 +14,8 @@ use Code::Coverable;
 say coverable-lines($path.IO);  # (3 5 11 24)
 
 say coverable-lines($source);   # (7 9 23 25)
+
+say coverable-files(@paths); # Map.new(path => lines, ...)
 ```
 
 DESCRIPTION
@@ -41,10 +43,24 @@ coverable-files
 ---------------
 
 ```raku
-say coverable-files(@paths); # Map.new(path => lines)
+say coverable-files(@paths);           # Map.new(path => lines, ...)
+
+say coverable-files(@paths, :repo<.>); # Map.new(path => lines, ...)
 ```
 
-The `coverable-files` subroutine takes any number of positional arguments, each of which is assumed to be a path specification of a Raku source file (or an `IO::Path` object). It returns a `Map` with the absolute paths as keys, and an ordered list of line numbers as the values.
+The `coverable-files` subroutine takes any number of positional arguments, each of which is assumed to be a path specification of a Raku source file (or an `IO::Path` object), or a distribution identity (such as "Foo::Bar:ver<0.0.2>").
+
+It returns a `Map` with the absolute paths as keys, and an ordered list of line numbers as the values.
+
+If distribution identities are specified, a `:repo` named argument can be specified, which can be an object of type:
+
+  * Str - indicate a path for a ::FileSystem repo, just as with -I.
+
+  * IO::Path - indicate a path for a ::FileSystem repo
+
+  * CompUnit::Repository - the actual repo to use
+
+The default is to use the current $*REPO setting to resolve any identity given.
 
 SCRIPTS
 =======
@@ -65,7 +81,7 @@ Elizabeth Mattijsen <liz@raku.rocks>
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2024 Elizabeth Mattijsen
+Copyright 2024, 2025 Elizabeth Mattijsen
 
 Source can be located at: https://github.com/lizmat/actions . Comments and Pull Requests are welcome.
 

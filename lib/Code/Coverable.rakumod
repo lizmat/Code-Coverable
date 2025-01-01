@@ -1,4 +1,4 @@
-use v6.*;
+use MoarVM::Bytecode:ver<0.0.21+>:auth<zef:lizmat>;
 
 my proto sub coverable-lines(|) is export {*}
 
@@ -6,10 +6,25 @@ my multi sub coverable-lines(IO:D $io) {
     coverable-lines($_) with $io.slurp;
 }
 
-my multi sub coverable-lines(Str:D $source) {
+my multi sub coverable-lines(Str:D $string, $repo?) {
+    $string.contains("\n")
+      ?? coverables-from-source($string)
+      !! coverables-from-bytecode($string, $repo)
+}
+
+my sub coverables-from-bytecode(Str:D $identity, $repo) {
+    with try MoarVM::Bytecode.new($identity, $repo) {
+        my $coverables := .coverables;
+        return $coverables.values.head if $coverables.keys == 1;
+    }
+
+    ()
+}
+
+my sub coverables-from-source(Str:D $source) {
     my int @lines;
     sub get-line($node) {
-        unless $node ~~ RakuAST::Doc {
+        unless $node.^name.starts-with('RakuAST::Doc') {
             @lines.push(.source.original-line(.from))
               with $node.origin;
             $node.visit-children(&get-line);
@@ -23,13 +38,18 @@ my multi sub coverable-lines(Str:D $source) {
 
 my proto sub coverable-files(|) is export {*}
 
-my multi sub coverable-files(*@paths) {
-    coverable-files(@paths)
+my multi sub coverable-files(*@paths, :$repo) {
+    coverable-files(@paths, $repo)
 }
-my multi sub coverable-files(@paths) {
+my multi sub coverable-files(@paths, :$repo) {
     @paths.map(-> $path {
         my $io := $path.IO;
-        $io.absolute => $_ with coverable-lines($io);
+        if $io.e {
+            $io.absolute => $_ with coverable-lines($io)
+        }
+        orwith MoarVM::Bytecode.new($path, $repo) {
+            .coverables.Slip
+        }
     }).Map
 }
 
@@ -48,6 +68,8 @@ use Code::Coverable;
 say coverable-lines($path.IO);  # (3 5 11 24)
 
 say coverable-lines($source);   # (7 9 23 25)
+
+say coverable-files(@paths); # Map.new(path => lines, ...)
 
 =end code
 
@@ -79,15 +101,28 @@ a sorted list of line numbers that appear to have coverable code.
 
 =begin code :lang<raku>
 
-say coverable-files(@paths); # Map.new(path => lines)
+say coverable-files(@paths);           # Map.new(path => lines, ...)
+
+say coverable-files(@paths, :repo<.>); # Map.new(path => lines, ...)
 
 =end code
 
 The C<coverable-files> subroutine takes any number of positional
 arguments, each of which is assumed to be a path specification of a
-Raku source file (or an C<IO::Path> object).  It returns a C<Map>
-with the absolute paths as keys, and an ordered list of line numbers
-as the values.
+Raku source file (or an C<IO::Path> object), or a distribution
+identity (such as "Foo::Bar:ver<0.0.2>").
+
+It returns a C<Map> with the absolute paths as keys, and an ordered
+list of line numbers as the values.
+
+If distribution identities are specified, a C<:repo> named argument
+can be specified, which can be an object of type:
+=item Str - indicate a path for a ::FileSystem repo, just as with -I.
+=item IO::Path - indicate a path for a ::FileSystem repo
+=item CompUnit::Repository - the actual repo to use
+
+The default is to use the current $*REPO setting to resolve any
+identity given.
 
 =head1 SCRIPTS
 
@@ -110,7 +145,7 @@ Elizabeth Mattijsen <liz@raku.rocks>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2024 Elizabeth Mattijsen
+Copyright 2024, 2025 Elizabeth Mattijsen
 
 Source can be located at: https://github.com/lizmat/actions . Comments and
 Pull Requests are welcome.
