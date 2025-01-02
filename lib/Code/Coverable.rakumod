@@ -147,7 +147,7 @@ Elizabeth Mattijsen <liz@raku.rocks>
 
 Copyright 2024, 2025 Elizabeth Mattijsen
 
-Source can be located at: https://github.com/lizmat/actions . Comments and
+Source can be located at: https://github.com/lizmat/Code-Coverable . Comments and
 Pull Requests are welcome.
 
 If you like this module, or what I'm doing more generally, committing to a
