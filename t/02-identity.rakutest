@@ -3,24 +3,27 @@ use Test;
 use Code::Coverable;
 
 # All (in)direct dependencies that should be installed
-my @identities = <
-  Identity::Utils MoarVM::Bytecode String::Utils Test
+my @targets = <
+  Identity::Utils List::Agnostic META::verauthapi MoarVM::Bytecode
+  paths String::Utils Test
 >;
-my @min-elems = 130,560,220,460;  # heuristic
+my @min-elems = 130,10,10,560,80,220,460;  # heuristic
 
-plan +@identities;
+plan 2 * @targets;
 
-my %map := coverable-files(@identities);
+my %map = coverables(@targets).map: { .key => $_ }
 
-my @keys = @identities.map: {
+my @keys = @targets.map: {
     %map.keys.first: *.ends-with("($_)")
 }
 
-for @identities.kv -> $index, $identity {
-    my $key       = @keys[$index];
+for @targets.kv -> $index, $target {
+    my $cc  = %map{@keys[$index]};
+    is $cc.target, $target, "did we get '$target' as target";
+
     my $min-elems = @min-elems[$index];
-    my $elems     = %map{$key}.elems;
-    ok $elems > $min-elems, "$elems > $min-elems for '$identity'";
+    my $elems     = $cc.line-numbers.elems;
+    ok $elems > $min-elems, "$elems > $min-elems for '$target'";
 }
 
 # vim: expandtab shiftwidth=4

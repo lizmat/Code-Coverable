@@ -6,7 +6,8 @@
   "build-depends": [
   ],
   "depends": [
-    "MoarVM::Bytecode:ver<0.0.21+>:auth<zef:lizmat>"
+    "Identity::Utils:ver<0.0.16+>:auth<zef:lizmat>",
+    "MoarVM::Bytecode:ver<0.0.22+>:auth<zef:lizmat>"
   ],
   "description": "Produce overview of coverable lines of code",
   "license": "Artistic-2.0",
@@ -23,5 +24,5 @@
   ],
   "test-depends": [
   ],
-  "version": "0.0.3"
+  "version": "0.0.4"
 }

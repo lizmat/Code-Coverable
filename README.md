@@ -15,7 +15,7 @@ say coverable-lines($path.IO);  # (3 5 11 24)
 
 say coverable-lines($source);   # (7 9 23 25)
 
-say coverable-files(@paths); # Map.new(path => lines, ...)
+my @coverables = coverables(@paths);
 ```
 
 DESCRIPTION
@@ -39,18 +39,36 @@ say coverable-lines($source);   # (7 9 23 25)
 
 The `coverable-lines` subroutine takes a single argument which is either a `IO::Path` or a `Str`, uses its contents (slurped in case of an `IO::Path`), tries to build an AST from that and returns a sorted list of line numbers that appear to have coverable code.
 
-coverable-files
----------------
+coverables
+----------
 
 ```raku
-say coverable-files(@paths);           # Map.new(path => lines, ...)
-
-say coverable-files(@paths, :repo<.>); # Map.new(path => lines, ...)
+for coverables(@targets) -> $cc {
+    say $cc.target;
+    say $cc.key;
+    say $cc.line-numbers;
+    say $cc.source;
+}
 ```
 
-The `coverable-files` subroutine takes any number of positional arguments, each of which is assumed to be a path specification of a Raku source file (or an `IO::Path` object), or a distribution identity (such as "Foo::Bar:ver<0.0.2>").
+The `coverables` subroutine takes any number of positional arguments, each of which is assumed to be a target specification, which can be:
 
-It returns a `Map` with the absolute paths as keys, and an ordered list of line numbers as the values.
+  * a `Str` specification of a Raku source file
+
+  * an `IO::Path` object specifying a Raku source file
+
+  * a distribution identity (such as "Foo::Bar:ver<0.0.2>")
+
+It returns a `Seq` of `Code::Coverable` objects. Note that it **is** possible that even a single target produces more than one `Code::Coverable` object, if the source of the target has used `#line 42 filename` directives.
+
+```raku
+for coverables("String::Utils", :repo<.>) -> $cc {
+    say $cc.target;
+    say $cc.key;
+    say $cc.line-numbers;
+    say $cc.source;
+}
+```
 
 If distribution identities are specified, a `:repo` named argument can be specified, which can be an object of type:
 
@@ -60,7 +78,42 @@ If distribution identities are specified, a `:repo` named argument can be specif
 
   * CompUnit::Repository - the actual repo to use
 
-The default is to use the current $*REPO setting to resolve any identity given.
+The default is to use the current `$*REPO` setting to resolve any identity given.
+
+CLASSES
+=======
+
+Code::Coverable
+---------------
+
+The `Code::Coverable` object is generally created by the `coverables` subroutine, but could also be created manually.
+
+```raku
+my $cc = Code::Coverable.new(
+  target       => "Identity::Utils",
+  key          => "site#sources/072CEA63F659CFD963095494CEA22A46E4F93A95 (Identity::Utils)"
+  line-numbers => (1,14,19,...),
+  source         => "/.../site/sources/072CEA63F659CFD963095494CEA22A46E4F93A95".IO,
+);
+```
+
+The following public attributes are available:
+
+### target
+
+Mandatory: a string with the target for these coverables: this can either be distribution name, or a path to a source file.
+
+### key
+
+Mandatory: a string that should match in the coverage log to mark a line as being "covered".
+
+### line-numbers
+
+Mandatory: a `List` of unique integer values of the line numbers that **could** potentially be covered in a coverage log.
+
+### source
+
+Optional: an `IO::Path` object of the Raku source file. This could either be the same as the target, or could be derived from the information specified for the key.
 
 SCRIPTS
 =======

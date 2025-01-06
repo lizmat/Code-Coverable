@@ -6,15 +6,20 @@ plan 1;
 
 my @paths = (
   $*PROGRAM.parent.sibling("bin").add("coverable-lines"),
-  $*PROGRAM.parent.sibling("lib").add("Code").add("Coverable.rakumod"),
   $*PROGRAM,
+  $*PROGRAM.sibling("02-identity.rakutest"),
+#  $*PROGRAM.parent.sibling("lib").add("Code").add("Coverable.rakumod"),
 ).map(*.absolute);
 
-is-deeply coverable-files(@paths), Map.new(
-  @paths[0] => (1,4,5,6,7),
-  @paths[1] => (1,3,5,6,9,10,11,12,15,16,17,18,21,24,25,26,27,28,29,30,
-                33,34,35,39,41,42,44,45,46,47,48,50,51,53),
-  @paths[2] => (1,3,5,7,8,9,10,11,13,14,15,16,17,18),
-), 'are all expected lines seen';
+is-deeply
+  coverables(@paths).map({ .key => .line-numbers }).Map,
+  Map.new(
+    @paths[0] => (1,4,5,6),
+    @paths[1] => (1,3,5,7,8,9,10,12,14,15,16,17,18,19,23),
+    @paths[2] => (1,3,6,10,12,14,16,17,20,21,22,24,25,26),
+#    @paths[3] => (1,2,4,6,7,10,11,12,13,16,17,18,19,22,25,26,27,28,29,30,31,34,
+#                  35,36,40,42,43,45,46,47,48,50,51,52,53,56),
+  ),
+  'are all keys and expected lines seen';
 
 # vim: expandtab shiftwidth=4

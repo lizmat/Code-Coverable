@@ -2,9 +2,9 @@ use Code::Coverable;
 
 #| Produce list of coverable files / lines
 sub MAIN(*@files) {
-    my %m := coverable-files(@files);
-    say "$_.key(): $_.value.join(",")"
-      for %m.sort(*.key);
+    for coverables(@files).sort(*.target) {
+        say "$_.key(): $_.coverables.join(",")";
+    }
 }
         
 # vim: expandtab shiftwidth=4

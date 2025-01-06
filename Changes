@@ -2,9 +2,16 @@ Revision history for Code::Coverable
 
 {{$NEXT}}
 
+0.0.4  2025-01-06T21:41:31+01:00
+    - Add Code::Coverable class
+    - Rename "coverable-files" subroutine to the more
+      appropriate "coverables", as it now returns a Seq
+      of Code::Coverables objects
+
 0.0.3  2025-01-01T15:17:29+01:00
     - Add dependency on MoarVM::Bytecode
     - Allow identities to be specified as well as paths
+    - Update copyright year
 
 0.0.2  2024-12-26T01:05:22+01:00
     - Make sure keys are absolute paths always
