@@ -25,23 +25,13 @@ class Code::Coverable {
         with $!source {
             $_
         }
-        else {
-            my $target := $!key.subst(/ ' (' .* /);
-            my ($repo-name,$postfix) = $target.split("#",2);
-            with $postfix && %repo-name2root{$repo-name} {
-                $!source := .add($postfix);
-            }
-            elsif $target.starts-with("SETTING::") {
-                $!source := $SETTING-root.add($target,substr(9));
-            }
-            elsif $target.starts-with("/") {
-                $!source := $target.IO;
-            }
+        orwith key2source($!key) {
+            $!source := $_;
         }
     }
 }
 
-#- subroutines -----------------------------------------------------------------
+#- coverable-lines -------------------------------------------------------------
 my proto sub coverable-lines(|) is export {*}
 
 my multi sub coverable-lines(IO:D $io) {
@@ -78,6 +68,7 @@ my sub coverables-from-source(Str:D $source) {
     }
 }
 
+#- coverables ------------------------------------------------------------------
 my proto sub coverables(|) is export {*}
 
 my multi sub coverables(*@targets, :$repo) {
@@ -104,6 +95,24 @@ my multi sub coverables(@targets, :$repo) {
                 ) with coverable-lines($io)
             }
         }
+    }
+}
+
+#- key2source ------------------------------------------------------------------
+my sub key2source($key) is export {
+    my $target := $key.subst(/ ' (' .* /);
+    my ($repo-name,$postfix) = $target.split("#",2);
+    with $postfix && %repo-name2root{$repo-name} {
+        .add($postfix)
+    }
+    elsif $target.starts-with("SETTING::") {
+        $SETTING-root.add($target,substr(9))
+    }
+    elsif $target.starts-with("/") {
+        $target.IO
+    }
+    else {
+        Nil
     }
 }
 

@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+    - Add "key2source" subroutine to convert a coverage key
+      to an IO::Path of the associated source file
 
 0.0.5  2025-01-07T11:42:58+01:00
     - Fix issue in "coverable-lines" script

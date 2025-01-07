@@ -88,6 +88,17 @@ which can be an object of type:
 The default is to use the current C<$*REPO> setting to resolve any
 identity given.
 
+=head2 key2source
+
+=begin code :lang<raku>
+
+print .slurp with key2source($key);  # show source for the given key
+
+=end code
+
+The C<key2source> subroutine converts a given coverage key to a
+C<IO::Path> of the source file (if possible), or returns C<Nil>.
+
 =head1 CLASSES
 
 =head2 Code::Coverable
