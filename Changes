@@ -2,6 +2,10 @@ Revision history for Code::Coverable
 
 {{$NEXT}}
 
+0.0.5  2025-01-07T11:42:58+01:00
+    - Fix issue in "coverable-lines" script
+    - Updated documentation a bit
+
 0.0.4  2025-01-06T21:41:31+01:00
     - Add Code::Coverable class
     - Rename "coverable-files" subroutine to the more

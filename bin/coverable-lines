@@ -3,7 +3,7 @@ use Code::Coverable;
 #| Produce list of coverable files / lines
 sub MAIN(*@files) {
     for coverables(@files).sort(*.target) {
-        say "$_.key(): $_.coverables.join(",")";
+        say "$_.key(): $_.line-numbers.join(",")";
     }
 }
         
