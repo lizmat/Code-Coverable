@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+
+0.0.7  2025-01-08T16:17:56+01:00
     - Hopefully fix "bare" installation test issue
     - Always remove line 1 from coverables from bytecode:
       it is coverable even if there isn't any code, and it
