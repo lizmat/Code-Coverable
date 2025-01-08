@@ -1,6 +1,10 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+    - Hopefully fix "bare" installation test issue
+    - Always remove line 1 from coverables from bytecode:
+      it is coverable even if there isn't any code, and it
+      is always covered, so there's no information there
 
 0.0.6  2025-01-07T13:22:20+01:00
     - Add "key2source" subroutine to convert a coverage key

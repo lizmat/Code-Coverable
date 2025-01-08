@@ -78,10 +78,13 @@ my multi sub coverables(@targets, :$repo) {
     @targets.map: -> $target {
         with bytecode($target, $repo) andthen MoarVM::Bytecode.new($_) {
             .coverables.map( {
+                my @line-numbers := .value;
+                @line-numbers.shift if @line-numbers.head == 1;
+
                 Code::Coverable.new(
                   target       => $target,
                   key          => .key,
-                  line-numbers => .value.List
+                  line-numbers => @line-numbers.List,
                 )
             }).Slip
         }

@@ -23,7 +23,7 @@ for @targets.kv -> $index, $target {
 
     my $min-elems = @min-elems[$index];
     my $elems     = $cc.line-numbers.elems;
-    ok $elems > $min-elems, "$elems > $min-elems for '$target'";
+    ok $elems >= $min-elems, "$elems >= $min-elems for '$target'";
 }
 
 # vim: expandtab shiftwidth=4
