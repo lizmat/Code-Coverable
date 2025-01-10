@@ -2,6 +2,9 @@ Revision history for Code::Coverable
 
 {{$NEXT}}
 
+0.0.9  2025-01-10T15:00:25+01:00
+    - Add line 1 again, as it *can* be a valid line as well
+
 0.0.8  2025-01-08T16:31:35+01:00
     - Remove test for coverable-lines script: it turns
       out it is too fragile on a bare install

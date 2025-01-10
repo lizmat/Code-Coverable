@@ -23,7 +23,7 @@ DESCRIPTION
 
 Code::Coverable contains logic for producing code coverage reports.
 
-This is still a work in progress. At the moment it will only export two subroutines and install a script "coverage-lines".
+This is still a work in progress. At the moment it will only export subroutines and install a script "coverage-lines".
 
 SUBROUTINES
 ===========
