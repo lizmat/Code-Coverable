@@ -82,6 +82,8 @@ The default is to use the current `$*REPO` setting to resolve any identity given
 
 The `raw` named argument can be used to indicate that no heuristics should be applied to mark lines (that are marked as "coverable" by the original discovery method) as **not** coverable by a set of heuristics. The default is to apply the heuristics. If a `True` value is specified, then the chance of false negatives in coverage reports is significantly increased.
 
+If a line in the source can not be recognized automatically, then the module developer can add the exact string `# UNCOVERABLE` at the **end** of the line that can not be covered.
+
 key2source
 ----------
 

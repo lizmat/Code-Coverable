@@ -148,7 +148,7 @@ my sub weed-out($target, $repo, @line-numbers) {
         # to have a complicated expression on the RHS.  In which case they
         # *will* get covered anyway, and just show up as covered anyway.
         elsif $line ~~ /^
-          \s* [my | has | our] [\s+ <[-_\w]>+]? \s+ <[$@%&]> <[.!*]>? <[-_\w]>+
+          \s* [my | has | our] [\s+ <[-_:\w]>+]? \s+ <[$@%&]> <[.!*]>? <[-_\w]>+
         / { }
 
         # A line with just an identifier without ; at the end of a scope
@@ -165,11 +165,17 @@ my sub weed-out($target, $repo, @line-numbers) {
         # Protos are almost never covered
         elsif $line ~~ /^ \s* [[my | our] \s+]?  proto \s+ / { }
 
-        # Lines for just opening scope, are almost never covered
-        elsif $line ~~ /^ \s* [')' \s+]? '{' $/ { }
+        # Lines for just opening scope
+        elsif $line ~~ /^ \s* [[')' | ']'] \s+]?'{' [\s+ '}']? $/ { }
+
+        # Lines that finalize a signature, are almost never covered
+        elsif $line ~~ /^ \s* '-->' / && $line.ends-with('{') { }
 
         # Lines that start with an nqp::op are almost never covered
         elsif $line ~~ /^ \s* 'nqp::' <[-\w]>+ '('? / { }
+
+        # Lines that are marked as uncoverable
+        elsif $line.ends-with('# UNCOVERABLE') { }
 
         # No reason to not include this line as coverable
         else { $accepted.push: $line-number }

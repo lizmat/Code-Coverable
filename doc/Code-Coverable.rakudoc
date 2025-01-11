@@ -95,6 +95,10 @@ heuristics.  The default is to apply the heuristics.  If a C<True>
 value is specified, then the chance of false negatives in coverage
 reports is significantly increased.
 
+If a line in the source can not be recognized automatically, then
+the module developer can add the exact string C<# UNCOVERABLE> at
+the B<end> of the line that can not be covered.
+
 =head2 key2source
 
 =begin code :lang<raku>
