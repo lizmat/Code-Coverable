@@ -69,7 +69,7 @@ C<#line 42 filename> directives.
 
 =begin code :lang<raku>
 
-for coverables("String::Utils", :repo<.>) -> $cc {
+for coverables("String::Utils", :repo<.>, :raw) -> $cc {
     say $cc.target;
     say $cc.key;
     say $cc.line-numbers;
@@ -87,6 +87,13 @@ which can be an object of type:
 
 The default is to use the current C<$*REPO> setting to resolve any
 identity given.
+
+The C<raw> named argument can be used to indicate that no heuristics
+should be applied to mark lines (that are marked as "coverable" by
+the original discovery method) as B<not> coverable by a set of
+heuristics.  The default is to apply the heuristics.  If a C<True>
+value is specified, then the chance of false negatives in coverage
+reports is significantly increased.
 
 =head2 key2source
 

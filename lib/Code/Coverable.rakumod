@@ -1,6 +1,6 @@
 #- initializations -------------------------------------------------------------
-use Identity::Utils:ver<0.0.16+>:auth<zef:lizmat> <bytecode>;
-use MoarVM::Bytecode:ver<0.0.22+>:auth<zef:lizmat>;
+use Identity::Utils:ver<0.0.17+>:auth<zef:lizmat> <bytecode source>;
+use MoarVM::Bytecode:ver<0.0.24+>:auth<zef:lizmat>;
 
 # The root to be applied to SETTING:: prefixes
 my $SETTING-root = $*EXECUTABLE.parent(3);
@@ -74,18 +74,18 @@ my proto sub coverables(|) is export {*}
 my multi sub coverables(*@targets, :$repo) {
     coverables(@targets, :$repo)
 }
-my multi sub coverables(@targets, :$repo) {
+my multi sub coverables(@targets, :$repo, :$raw) {
     @targets.map: -> $target {
         with bytecode($target, $repo) andthen MoarVM::Bytecode.new($_) {
             .coverables.map( {
-                my @line-numbers := .value;
+                my $line-numbers := .value;
 
-# perform heuristics weeding out lines that will never be covered
+                # heuristics weeding out lines that will never be covered
+                $line-numbers := weed-out($target, $repo, $line-numbers)
+                  unless $raw;
 
                 Code::Coverable.new(
-                  target       => $target,
-                  key          => .key,
-                  line-numbers => @line-numbers.List,
+                  :$target, :key(.key), :line-numbers($line-numbers.List)
                 )
             }).Slip
         }
@@ -118,6 +118,64 @@ my sub key2source($key) is export {
     else {
         Nil
     }
+}
+
+#- weed-out --------------------------------------------------------------------
+# The logic behind this weeding out, is to prevent false positives in
+# any coverage report.  There appear to be a number of cases in MoarVM
+# when a line in source is marked as "coverable", but then is *not*
+# marked as covered, even though clearly the line got executed from the
+# surrounding lines getting marked as executed.  By unmarking these
+# lines here, the risk of false positives is reduced.  Should lines
+# be marked as covered even if they were not marked as coverable, then
+# they will simply show up in coverage reports as ✱ vs. *.
+
+my sub weed-out($target, $repo, @line-numbers) {
+    my @lines     = source($target, $repo).lines;
+    @lines.unshift("");  # allow 1-based indexing
+
+    my $accepted := IterationBuffer.new;
+    while @line-numbers {
+        my $line-number := @line-numbers.shift;
+        my $line        := @lines[$line-number];
+
+        # "else" statements never get covered
+        if $line ~~ /^
+          \s+ else \s+ '{'
+        / { }
+
+        # Variable initializations rarely get covered, only if they happen
+        # to have a complicated expression on the RHS.  In which case they
+        # *will* get covered anyway, and just show up as covered anyway.
+        elsif $line ~~ /^
+          \s* [my | has | our] [\s+ <[-_\w]>+]? \s+ <[$@%&]> <[.!*]>? <[-_\w]>+
+        / { }
+
+        # A line with just an identifier without ; at the end of a scope
+        # is very likely to not get covered.
+        elsif $line ~~ /^ \s+ <[$@%&]>? <[-_\w]>+ $/
+          && (@lines[$line-number + 1] // "") ~~ /^ \s* '}' $/ { }
+
+        # Use statements are compile-time, and thus never covered
+        elsif $line ~~ /^ \s* use \s+ / { }
+
+        # Constants and enums are compile-time, and thus never covered
+        elsif $line ~~ /^ \s* [ my | our ] \s+ [constant | enum] \s+ / { }
+
+        # Protos are almost never covered
+        elsif $line ~~ /^ \s* [[my | our] \s+]?  proto \s+ / { }
+
+        # Lines for just opening scope, are almost never covered
+        elsif $line ~~ /^ \s* [')' \s+]? '{' $/ { }
+
+        # Lines that start with an nqp::op are almost never covered
+        elsif $line ~~ /^ \s* 'nqp::' <[-\w]>+ '('? / { }
+
+        # No reason to not include this line as coverable
+        else { $accepted.push: $line-number }
+    }
+
+    $accepted
 }
 
 # vim: expandtab shiftwidth=4

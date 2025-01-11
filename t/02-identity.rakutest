@@ -11,7 +11,7 @@ my @min-elems = 130,10,10,560,80,220,460;  # heuristic
 
 plan 2 * @targets;
 
-my %map = coverables(@targets).map: { .key => $_ }
+my %map = coverables(@targets, :raw).map: { .key => $_ }
 
 my @keys = @targets.map: {
     %map.keys.first: *.ends-with("($_)")
