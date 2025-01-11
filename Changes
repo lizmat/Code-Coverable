@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+
+0.0.10  2025-01-11T15:04:24+01:00
     - Bump dependencies where appropriate
     - Apply the initial set of heuristics on "coverables",
       and introduce the :raw named argument to it
