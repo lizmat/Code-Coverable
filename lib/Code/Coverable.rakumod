@@ -159,14 +159,21 @@ my sub weed-out($target, $repo, @line-numbers) {
         # Use statements are compile-time, and thus never covered
         elsif $line ~~ /^ \s* use \s+ / { }
 
-        # Constants and enums are compile-time, and thus never covered
-        elsif $line ~~ /^ \s* [ my | our ] \s+ [constant | enum] \s+ / { }
+        # Constants, enums, subsets are compile-time, thus never covered
+        elsif $line ~~ /^
+          \s* [[ my | our ] \s+]? [constant | enum | subset] \s+
+        / { }
+
+        # BEGIN phasers are compile time only, and thus never covered
+        elsif $line ~~ /^ \s* BEGIN \s+ / { }
 
         # Protos are almost never covered
         elsif $line ~~ /^ \s* [[my | our] \s+]?  proto \s+ / { }
 
         # Lines for just opening scope
-        elsif $line ~~ /^ \s* [[')' | ']'] \s+]?'{' [\s+ '}']? $/ { }
+        elsif $line ~~ /^
+          \s* [[')' | ']'] \s+]? [is \s+ <[-_\w]>+ \s+]* '{' [\s+ '}']?
+        $/ { }
 
         # Lines that finalize a signature, are almost never covered
         elsif $line ~~ /^ \s* '-->' / && $line.ends-with('{') { }

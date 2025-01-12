@@ -2,6 +2,10 @@ Revision history for Code::Coverable
 
 {{$NEXT}}
 
+0.0.12  2025-01-12T22:40:35+01:00
+    - Apply still more heuristics, e.g. subsets and BEGIN
+      phasers
+
 0.0.11  2025-01-11T19:52:02+01:00
     - Apply some more heuristics, and recognize
       '# UNCOVERABLE' as an indication a line will most
