@@ -141,7 +141,7 @@ my sub weed-out($target, $repo, @line-numbers) {
 
         # "else" statements never get covered
         if $line ~~ /^
-          \s+ else \s+ '{'
+          \s* ['}' \s+]? else \s+ '{'
         / { }
 
         # Variable initializations rarely get covered, only if they happen
