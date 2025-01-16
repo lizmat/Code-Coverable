@@ -148,13 +148,20 @@ my sub weed-out($target, $repo, @line-numbers) {
         # to have a complicated expression on the RHS.  In which case they
         # *will* get covered anyway, and just show up as covered anyway.
         elsif $line ~~ /^
-          \s* [my | has | our] [\s+ <[-_:\w]>+]? \s+ <[$@%&]> <[.!*]>? <[-_\w]>+
+          \s*
+          [my | has | our]                        # scope indicator
+          [\s+ <[-_:\w]>+ ['(' <[-_\w]>* ')']?]?  # type/coercions
+          \s+
+          <[$@%&]>                                # sigil
+          <[.!*]>?                                # any twigil
+          <[-_\w]>+                               # identifier
         / { }
 
-        # A line with just an identifier without ; at the end of a scope
+        # A line with just an identifier at the end of a scope
         # is very likely to not get covered.
-        elsif $line ~~ /^ \s+ <[$@%&]>? <[-_\w]>+ $/
-          && (@lines[$line-number + 1] // "") ~~ /^ \s* '}' $/ { }
+        elsif $line ~~ /^
+          \s+ ['--' | '++']? <[$@%&]>? <[-_\w]>+ \s* ';'? \s*
+        $/ && (@lines[$line-number + 1] // "") ~~ /^ \s* '}' $/ { }
 
         # Use statements are compile-time, and thus never covered
         elsif $line ~~ /^ \s* use \s+ / { }
