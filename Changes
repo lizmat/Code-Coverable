@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+    - Apply still more heuristics: cozy else, ; at end
+      of scope
 
 0.0.12  2025-01-12T22:40:35+01:00
     - Apply still more heuristics, e.g. subsets and BEGIN
