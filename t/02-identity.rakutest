@@ -13,8 +13,8 @@ plan 2 * @targets;
 
 my %map = coverables(@targets, :raw).map: { .key => $_ }
 
-my @keys = @targets.map: {
-    %map.keys.first: *.ends-with("($_)")
+my @keys = @targets.map: -> $target {
+    %map.keys.first: *.ends-with("($target)")
 }
 
 for @targets.kv -> $index, $target {

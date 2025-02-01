@@ -1,6 +1,8 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+
+0.0.13  2025-02-01T22:09:42+01:00
     - Apply still more heuristics: cozy else, ; at end
       of scope
 
