@@ -1,6 +1,6 @@
 #- initializations -------------------------------------------------------------
-use Identity::Utils:ver<0.0.17+>:auth<zef:lizmat> <bytecode source>;
-use MoarVM::Bytecode:ver<0.0.24+>:auth<zef:lizmat>;
+use Identity::Utils:ver<0.0.19+>:auth<zef:lizmat> <bytecode source>;
+use MoarVM::Bytecode:ver<0.0.27+>:auth<zef:lizmat>;
 
 # The root to be applied to SETTING:: prefixes
 my $SETTING-root = $*EXECUTABLE.parent(3);
@@ -110,7 +110,7 @@ my sub key2source($key) is export {
         .add($postfix)
     }
     elsif $target.starts-with("SETTING::") {
-        $SETTING-root.add($target,substr(9))
+        $SETTING-root.add($target.substr(9))
     }
     elsif $target.starts-with("/") {
         $target.IO
