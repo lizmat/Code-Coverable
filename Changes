@@ -1,8 +1,11 @@
 Revision history for Code::Coverable
 
 {{$NEXT}}
+
+0.0.14  2026-09-23T12:21:43+02:00
     - Fix test heuristics for RakuAST
-    - Bump dependency on Identity::Utils, because we can
+    - Modernize META
+    - Bump dependencies, because we can
     - Update copyright year
 
 0.0.13  2025-02-01T22:09:42+01:00

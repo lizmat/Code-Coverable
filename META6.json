@@ -5,24 +5,33 @@
   ],
   "build-depends": [
   ],
-  "depends": [
-    "Identity::Utils:ver<0.0.29+>:auth<zef:lizmat>",
-    "MoarVM::Bytecode:ver<0.0.27+>:auth<zef:lizmat>"
-  ],
+  "depends": {
+    "runtime": {
+      "requires": [
+        "Identity::Utils:ver<0.0.29+>:auth<zef:lizmat>",
+        "MoarVM::Bytecode:ver<0.0.27+>:auth<zef:lizmat>"
+      ]
+    }
+  },
   "description": "Produce overview of coverable lines of code",
   "license": "Artistic-2.0",
   "name": "Code::Coverable",
-  "perl": "6.d",
   "provides": {
     "Code::Coverable": "lib/Code/Coverable.rakumod"
   },
+  "raku": "6.d",
   "resources": [
   ],
   "source-url": "https://github.com/lizmat/Code-Coverable.git",
+  "support": {
+    "bugtracker": "https://github.com/lizmat/Code-Coverable/issues",
+    "email": "liz@raku.rocks",
+    "source": "https://github.com/lizmat/Code-Coverable.git"
+  },
   "tags": [
     "COVERAGE"
   ],
   "test-depends": [
   ],
-  "version": "0.0.13"
+  "version": "0.0.14"
 }
